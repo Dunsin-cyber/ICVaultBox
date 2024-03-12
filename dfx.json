@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "ic_vault_box_backend": {
+      "main": "src/ic_vault_box_backend/main.mo",
+      "type": "motoko"
+    },
+    "ic_vault_box_frontend": {
+      "dependencies": [
+        "ic_vault_box_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/ic_vault_box_frontend/src/index.html"
+      },
+      "source": [
+        "src/ic_vault_box_frontend/assets",
+        "dist/ic_vault_box_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
