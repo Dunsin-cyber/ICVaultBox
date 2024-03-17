@@ -22,23 +22,32 @@ shared ({ caller }) actor class Vault() {
     if (password.size() < 10) {
       return #err("must be more than ");
     };
-    // credentials.put({
-    //   email = email;
-    //   password = password;
-    // })
+    credentials.add(
+      await createCredentials(
+        email, password
+      )
+    );
     #ok("Works i suppose");
   };
 
-  func createPayload(site_name : Text, website : Text, username : ?Text, email :?Text, password : Text) : async (){
+  func createCredentials(email : Text, password : Text) : async Credentials {
+    {
+      email; password
+    }
+  };
 
+  func createPayload(site_name : Text, website : Text, username : ?Text, email :?Text, password : Text, password_updated : Bool, last_updated : ?Int) : async Manager {
+    {
+      site_name; website; username; email; password; password_updated; last_updated
+    }
   };
 
   public func uploadPayload(site_name : Text, website : Text, username : ?Text, email :?Text, password : Text) : async () {
-
+    manager.add(await createPayload(site_name, website, username, email, password, false, null))
   };
 
   public func updatePayload() : async () {
-
+    
   };
 
   public func updateCredentials() : async () {

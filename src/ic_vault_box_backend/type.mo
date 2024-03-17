@@ -13,6 +13,6 @@ module {
         email : ?Text;
         password : Text;
         password_updated : Bool;
-        last_updated : Text;
+        last_updated : ?Int;
     }
 }
