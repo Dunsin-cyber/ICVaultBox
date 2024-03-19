@@ -15,7 +15,8 @@
     "dev": "webpack --watch --progress --config  webpack.config.js --mode development --env development",
     "deploy:local": "dfx deploy --network=local",
     "deploy:ic": "dfx deploy --network=ic",
-    "generate": "dfx generate ic_vault_box_backend"
+    "generate": "dfx generate ic_vault_box_backend",
+    "watch": "webpack watch --progress --config webpack.config.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
