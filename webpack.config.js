@@ -102,6 +102,10 @@ module.exports = {
           to: ".ic-assets.json5",
           noErrorOnMissing: true,
         },
+        {
+          from: `src/manifest.json`,
+          to: `.ic-assets.json5`
+        }
       ],
     }),
   ],

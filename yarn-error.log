@@ -1,0 +1,92 @@
+Arguments: 
+  /Users/user/.nvm/versions/node/v21.1.0/bin/node /opt/homebrew/Cellar/yarn/1.22.19/libexec/bin/yarn.js add -D copy-webpack-plugin
+
+PATH: 
+  /Users/user/.bun/bin:/Users/user/.nvm/versions/node/v21.1.0/bin:/Users/user/.local/share/solana/install/active_release/bin:/opt/homebrew/opt/ruby/bin:/Users/user/.local/share/solana/install/active_release/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Users/user/.bun/bin:/Users/user/.nvm/versions/node/v21.1.0/bin:/Users/user/.local/share/solana/install/active_release/bin:/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/user/.cargo/bin:/Applications/Postgres.app/Contents/Versions/16/bin:/Users/user/Development/flutter/bin:/Users/user/Development/flutter/bin/cache/dart-sdk/bin:/Users/user/.pub-cache/bin:/Applications/Postgres.app/Contents/Versions/16/bin:/Users/user/Development/flutter/bin:/Users/user/Development/flutter/bin/cache/dart-sdk/bin:/Users/user/.pub-cache/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  21.1.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: https://registry.npmjs.org/framer-motion: ETIMEDOUT
+      at Timeout._onTimeout (/opt/homebrew/Cellar/yarn/1.22.19/libexec/lib/cli.js:141550:19)
+      at listOnTimeout (node:internal/timers:573:17)
+      at process.processTimers (node:internal/timers:514:7)
+
+npm manifest: 
+  {
+    "name": "ic_vault_box_frontend",
+    "version": "0.2.0",
+    "description": "Internet Computer starter application",
+    "keywords": [
+      "Internet Computer",
+      "Motoko",
+      "JavaScript",
+      "Canister"
+    ],
+    "scripts": {
+      "build": "webpack",
+      "prebuild": "dfx generate",
+      "start": "webpack serve --mode development --env development",
+      "deploy:local": "dfx deploy --network=local",
+      "deploy:ic": "dfx deploy --network=ic",
+      "generate": "dfx generate ic_vault_box_backend",
+      "watch": "webpack watch --progress --config webpack.config.js"
+    },
+    "dependencies": {
+      "@chakra-ui/react": "^2.8.2",
+      "@dfinity/agent": "^1.0.1",
+      "@dfinity/candid": "^1.0.1",
+      "@dfinity/principal": "^1.0.1",
+      "@emotion/react": "^11.11.4",
+      "@emotion/styled": "^11.11.0",
+      "framer-motion": "^11.0.12",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-router-dom": "^6.22.3"
+    },
+    "devDependencies": {
+      "assert": "2.0.0",
+      "buffer": "6.0.3",
+      "copy-webpack-plugin": "^11.0.0",
+      "css-loader": "^6.10.0",
+      "dotenv": "^16.0.3",
+      "events": "3.3.0",
+      "file-loader": "^6.2.0",
+      "html-webpack-plugin": "5.5.0",
+      "process": "0.11.10",
+      "stream-browserify": "3.0.0",
+      "style-loader": "^3.3.4",
+      "svg-loader": "^0.0.2",
+      "terser-webpack-plugin": "^5.3.3",
+      "ts-loader": "^9.5.1",
+      "typescript": "^5.4.2",
+      "url-loader": "^4.1.1",
+      "util": "0.12.4",
+      "webpack": "^5.90.3",
+      "webpack-cli": "^4.10.0",
+      "webpack-dev-server": "^4.15.1"
+    },
+    "engines": {
+      "node": "^12 || ^14 || ^16 || >=17",
+      "npm": "^7.17 || >=8"
+    },
+    "browserslist": [
+      "last 2 chrome version",
+      "last 2 firefox version",
+      "last 2 safari version",
+      "last 2 edge version"
+    ]
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
