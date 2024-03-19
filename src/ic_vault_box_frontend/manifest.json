@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "ICVaultBox",
+  "version": "1.0.0",
+  "description": "First fully dentralized and encrypted safe for your password",
+  "action": {
+    "default_title": "Your Vault",
+    "default_popup": "popup.html"
+  }
+}

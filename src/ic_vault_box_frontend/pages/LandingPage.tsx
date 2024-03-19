@@ -1,8 +1,12 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 function LandingPage() {
-  return <Box>Landing Page</Box>;
+  return (
+    <Box>
+      <Text>Landing Page</Text>
+    </Box>
+  );
 }
 
 export default LandingPage;
