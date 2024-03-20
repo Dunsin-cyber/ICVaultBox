@@ -9,7 +9,9 @@ const App = () => {
   return (
     <React.Fragment>
       <Routes>
-        <Route path="/" element={<AddPasswordView addNew={addNew} />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/new" element={<AddPasswordView addNew={addNew} />} />
+        <Route path="/edit" element={<EditPasswordView edit={addNew} />} />
       </Routes>
     </React.Fragment>
   );

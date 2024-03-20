@@ -9,21 +9,16 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 const frontendDirectory = "ic_vault_box_frontend";
 
-// const frontend_entry = path.join("src", frontendDirectory, "src", "index.html");
-const frontend_entry = path.join(
-  "src",
-  frontendDirectory,
-  "popup",
-  "popup.tsx"
-);
+const frontend_entry = path.join("src", frontendDirectory, "src", "index.html");
+
 module.exports = {
   target: "web",
   mode: isDevelopment ? "development" : "production",
   entry: {
     // The frontend.entrypoint points to the HTML file for this build, so we need
     // to replace the extension to `.js`.
-    // index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".tsx"),
-    popup: path.resolve(`./src/${frontendDirectory}/popup/popup.tsx`),
+    index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".tsx"),
+    // popup: path.resolve(`./src/${frontendDirectory}/popup/popup.tsx`),
   },
   devtool: isDevelopment ? "source-map" : false,
   optimization: {
@@ -41,7 +36,7 @@ module.exports = {
     },
   },
   output: {
-    filename: "[name].js",
+    filename: "index.js",
     path: path.join(__dirname, "dist", frontendDirectory),
   },
 
@@ -95,11 +90,8 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      // template: path.join(__dirname, frontend_entry),
-      title: "ICVaultBox Extension",
-      filename: `popup.html`,
-      chunks: ["popup"],
-      // cache: false,
+      template: path.join(__dirname, frontend_entry),
+      cache: false,
     }),
     new webpack.EnvironmentPlugin([
       ...Object.keys(process.env).filter((key) => {
@@ -118,10 +110,6 @@ module.exports = {
           from: `src/${frontendDirectory}/src/.ic-assets.json*`,
           to: ".ic-assets.json5",
           noErrorOnMissing: true,
-        },
-        {
-          from: path.resolve(`src/${frontendDirectory}/manifest.json`),
-          to: path.resolve(`dist/${frontendDirectory}`),
         },
       ],
     }),
