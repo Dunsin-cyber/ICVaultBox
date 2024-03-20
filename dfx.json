@@ -4,6 +4,11 @@
       "main": "src/ic_vault_box_backend/main.mo",
       "type": "motoko"
     },
+    "system_api" : {
+      "candid": "src/system_api/vetkd_system_api",
+      "type": "rust",
+      "package": "vetkd_system_api"
+    },
     "ic_vault_box_frontend": {
       "dependencies": [
         "ic_vault_box_backend"
