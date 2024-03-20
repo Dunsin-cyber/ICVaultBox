@@ -8,6 +8,7 @@ import Blob "mo:base/Blob";
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
 import Principal "mo:base/Principal";
+import Nat8 "mo:base/Nat8";
 
 // import Type "type";
 
@@ -68,6 +69,7 @@ shared ({ caller }) actor class Vault() {
         case (null){};
         case(?email){
           Manager.put(email, await createPayload(site_name, website, username, ?email, password, false, null));
+          // let encryption_payload = website # email # password;
         }
       }
     };
@@ -77,6 +79,7 @@ shared ({ caller }) actor class Vault() {
         Manager.put(username, await createPayload(site_name, website, ?username, email, password, false, null));
       };
     };
+     
     
   };
 
@@ -122,22 +125,36 @@ shared ({ caller }) actor class Vault() {
     public shared ({ caller }) func symmetric_key_verification_key() : async Text {
         let { public_key } = await vetkd_system_api.vetkd_public_key({
             canister_id = null;
-            derivation_path = Array.make(Text.encodeUtf8("symmetric_key"));
+            derivation_path = Array.make(Text.encodeUtf8("vault_symmetric_key"));
             key_id = { curve = #bls12_381; name = "test_key_1" };
         });
         Hex.encode(Blob.toArray(public_key));
     };
 
-    public shared ({ caller }) func encrypted_symmetric_key_for_caller(encryption_public_key : Blob) : async Text {
+    public shared ({ caller }) func encrypted_symmetric_key_for_vault(email : Text, encryption_public_key : Blob) : async Text {
         Debug.print("encrypted_symmetric_key_for_caller: caller: " # debug_show (caller));
+        let _caller = Principal.toText(caller);
 
+        let (?payload)= Manager.get(email) else Debug.trap("payload not found");
+
+        let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
         let { encrypted_key } = await vetkd_system_api.vetkd_encrypted_key({
-            derivation_id = Principal.toBlob(caller);
-            public_key_derivation_path = Array.make(Text.encodeUtf8("symmetric_key"));
+            derivation_id = encoded_payload;
+            public_key_derivation_path = Array.make(Text.encodeUtf8("vault_symmetric_key"));
             key_id = { curve = #bls12_381; name = "test_key_1" };
             encryption_public_key;
         });
         Hex.encode(Blob.toArray(encrypted_key));
+    };
+
+    // Converts a nat to a fixed-size big-endian byte (Nat8) array
+    func natToBigEndianByteArray(len : Nat, n : Nat) : [Nat8] {
+        let ith_byte = func(i : Nat) : Nat8 {
+            assert (i < len);
+            let shift : Nat = 8 * (len - 1 - i);
+            Nat8.fromIntWrap(n / 2 ** shift);
+        };
+        Array.tabulate<Nat8>(len, ith_byte);
     };
 
     public shared ({ caller }) func ibe_encryption_key() : async Text {
@@ -149,11 +166,17 @@ shared ({ caller }) actor class Vault() {
         Hex.encode(Blob.toArray(public_key));
     };
 
-    public shared ({ caller }) func encrypted_ibe_decryption_key_for_caller(encryption_public_key : Blob) : async Text {
+    public shared ({ caller }) func encrypted_ibe_decryption_key_for_caller(email : Text, encryption_public_key : Blob) : async Text {
         Debug.print("encrypted_ibe_decryption_key_for_caller: caller: " # debug_show (caller));
 
+        let _caller = Principal.toText(caller);
+
+        let (?payload)= Manager.get(email) else Debug.trap("payload not found");
+
+        let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
+
         let { encrypted_key } = await vetkd_system_api.vetkd_encrypted_key({
-            derivation_id = Principal.toBlob(caller);
+            derivation_id = encoded_payload;
             public_key_derivation_path = Array.make(Text.encodeUtf8("ibe_encryption"));
             key_id = { curve = #bls12_381; name = "test_key_1" };
             encryption_public_key;
