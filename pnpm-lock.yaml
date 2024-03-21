@@ -11,6 +11,9 @@ dependencies:
   '@dfinity/agent':
     specifier: ^1.0.1
     version: 1.0.1(@dfinity/candid@1.0.1)(@dfinity/principal@1.0.1)
+  '@dfinity/auth-client':
+    specifier: ^1.1.1
+    version: 1.1.1(@dfinity/agent@1.0.1)(@dfinity/identity@1.1.1)(@dfinity/principal@1.0.1)
   '@dfinity/candid':
     specifier: ^1.0.1
     version: 1.0.1(@dfinity/principal@1.0.1)
@@ -1253,12 +1256,40 @@ packages:
       simple-cbor: 0.4.1
     dev: false
 
+  /@dfinity/auth-client@1.1.1(@dfinity/agent@1.0.1)(@dfinity/identity@1.1.1)(@dfinity/principal@1.0.1):
+    resolution: {integrity: sha512-LQT+HSrac+8bApxdtuYW1bjsy52dsushL/2ze3ca5CaQAW3LxmToe/8ePBwjamvDAvhZvmlODPpKvxmLFyP9iw==}
+    peerDependencies:
+      '@dfinity/agent': ^1.1.1
+      '@dfinity/identity': ^1.1.1
+      '@dfinity/principal': ^1.1.1
+    dependencies:
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1)(@dfinity/principal@1.0.1)
+      '@dfinity/identity': 1.1.1(@dfinity/agent@1.0.1)(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.4.5)
+      '@dfinity/principal': 1.0.1
+      idb: 7.1.1
+    dev: false
+
   /@dfinity/candid@1.0.1(@dfinity/principal@1.0.1):
     resolution: {integrity: sha512-PfZNV1fTOWtl+NhLOw71ACLYGugKF9HdEJKtkyBJqbj+6pqshvK6rllCUkGwMsmXfP8YopLzmoNVdy1rp/eOgg==}
     peerDependencies:
       '@dfinity/principal': ^1.0.1
     dependencies:
       '@dfinity/principal': 1.0.1
+    dev: false
+
+  /@dfinity/identity@1.1.1(@dfinity/agent@1.0.1)(@dfinity/principal@1.0.1)(@peculiar/webcrypto@1.4.5):
+    resolution: {integrity: sha512-GGMk9uYquyeZ4c1sPgsm+Iw3GVl0Qm6czVRTBaztZGk3Pmw8/+6byDSQiLqFApBwQCxit7uVozMR0fXC2IuENQ==}
+    peerDependencies:
+      '@dfinity/agent': ^1.1.1
+      '@dfinity/principal': ^1.1.1
+      '@peculiar/webcrypto': ^1.4.0
+    dependencies:
+      '@dfinity/agent': 1.0.1(@dfinity/candid@1.0.1)(@dfinity/principal@1.0.1)
+      '@dfinity/principal': 1.0.1
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
+      '@peculiar/webcrypto': 1.4.5
+      borc: 2.1.2
     dev: false
 
   /@dfinity/principal@1.0.1:
@@ -1458,6 +1489,32 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
     dev: true
+
+  /@peculiar/asn1-schema@2.3.8:
+    resolution: {integrity: sha512-ULB1XqHKx1WBU/tTFIA+uARuRoBVZ4pNdOA878RDrRbBfBGcSzi5HBkdScC6ZbHn8z7L8gmKCgPC1LHRrP46tA==}
+    dependencies:
+      asn1js: 3.0.5
+      pvtsutils: 1.3.5
+      tslib: 2.6.2
+    dev: false
+
+  /@peculiar/json-schema@1.1.12:
+    resolution: {integrity: sha512-coUfuoMeIB7B8/NMekxaDzLhaYmp0HZNPEjYRm9goRou8UZIC3z21s0sL9AWoCw4EG876QyO3kYrc61WNF9B/w==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /@peculiar/webcrypto@1.4.5:
+    resolution: {integrity: sha512-oDk93QCDGdxFRM8382Zdminzs44dg3M2+E5Np+JWkpqLDyJC9DviMh8F8mEJkYuUcUOGA5jHO5AJJ10MFWdbZw==}
+    engines: {node: '>=10.12.0'}
+    dependencies:
+      '@peculiar/asn1-schema': 2.3.8
+      '@peculiar/json-schema': 1.1.12
+      pvtsutils: 1.3.5
+      tslib: 2.6.2
+      webcrypto-core: 1.7.8
+    dev: false
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
@@ -1898,6 +1955,15 @@ packages:
   /array-flatten@1.1.1:
     resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
     dev: true
+
+  /asn1js@3.0.5:
+    resolution: {integrity: sha512-FVnvrKJwpt9LP2lAMl8qZswRNm3T4q9CON+bxldk2iwk3FFpuwhx2FfinyitizWHsVYyaY+y5JzDR0rCMV5yTQ==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      pvtsutils: 1.3.5
+      pvutils: 1.1.3
+      tslib: 2.6.2
+    dev: false
 
   /assert@2.0.0:
     resolution: {integrity: sha512-se5Cd+js9dXJnu6Ag2JFc00t+HmHOen+8Q+L7O9zI0PqQXr20uk2J0XQqMxZEeo5U50o8Nvmmx7dZrl+Ufr35A==}
@@ -3062,6 +3128,10 @@ packages:
       postcss: 8.4.35
     dev: true
 
+  /idb@7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
+    dev: false
+
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -3747,6 +3817,17 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
     dev: true
+
+  /pvtsutils@1.3.5:
+    resolution: {integrity: sha512-ARvb14YB9Nm2Xi6nBq1ZX6dAM0FsJnuk+31aUp4TrcZEdKUlSqOqsxJHUPJDNE3qiIp+iUPEIeR6Je/tgV7zsA==}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /pvutils@1.1.3:
+    resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
+    engines: {node: '>=6.0.0'}
+    dev: false
 
   /qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
@@ -4557,6 +4638,16 @@ packages:
     dependencies:
       minimalistic-assert: 1.0.1
     dev: true
+
+  /webcrypto-core@1.7.8:
+    resolution: {integrity: sha512-eBR98r9nQXTqXt/yDRtInszPMjTaSAMJAFDg2AHsgrnczawT1asx9YNBX6k5p+MekbPF4+s/UJJrr88zsTqkSg==}
+    dependencies:
+      '@peculiar/asn1-schema': 2.3.8
+      '@peculiar/json-schema': 1.1.12
+      asn1js: 3.0.5
+      pvtsutils: 1.3.5
+      tslib: 2.6.2
+    dev: false
 
   /webpack-cli@4.10.0(webpack-dev-server@4.15.1)(webpack@5.90.3):
     resolution: {integrity: sha512-NLhDfH/h4O6UOy+0LSso42xvYypClINuMNBVVzX4vX98TmTaTUxwRbXdhucbFMd2qLaCTcLq/PdYrvi8onw90w==}
