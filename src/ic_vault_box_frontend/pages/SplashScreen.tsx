@@ -1,7 +1,9 @@
 import React from "react";
-import { Box, Text, Image } from "@chakra-ui/react";
+import { Box, Text, Image, Button } from "@chakra-ui/react";
+import { AuthContext } from "../context";
 
 function SplashScreen() {
+  const { Auth, loading } = React.useContext(AuthContext);
   return (
     <Box
       h={`100vh`}
@@ -21,6 +23,9 @@ function SplashScreen() {
         <Image src="white-box.svg" />
         <Box h={3} />
         <Text fontStyle={"bold"}>IC Vault Box</Text>
+        <Button mt={2} onClick={Auth} isLoading={loading}>
+          Authenitcate
+        </Button>
       </Box>
     </Box>
   );

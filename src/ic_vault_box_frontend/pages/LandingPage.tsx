@@ -13,27 +13,19 @@ import {
 import PasswordListView from "../components/PasswordListView";
 import AddPasswordView from "./AddPassword";
 import EditPasswordView from "./EditPasswordView";
-import SplashScreen from "./SplashScreen";
 
 function LandingPage() {
   const [addNew, setAddNew] = useState(false);
   const [edit, setEdit] = useState(false);
 
-  const [splashLoaded, setSplashLoaded] = useState(false);
-
-  setTimeout(() => {
-    setSplashLoaded(true);
-  }, 3000);
 
   return addNew ? (
     <AddPasswordView addNew={setAddNew} />
   ) : edit ? (
     <EditPasswordView edit={setEdit} />
   ) : (
-    <Box>
-      {!splashLoaded ? (
-        <SplashScreen />
-      ) : (
+ 
+   
         <Box
           width={`360px`}
           h={`550px`}
@@ -85,8 +77,7 @@ function LandingPage() {
             <Image src="add.svg" m={`0`} mx={2} w={`35%`} />
           </Flex>
         </Box>
-      )}
-    </Box>
+   
   );
 }
 

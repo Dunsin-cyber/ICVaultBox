@@ -17,8 +17,8 @@ export const AuthContext = React.createContext<{
   setIIAuth: any;
   handleAuthenticated: any;
   changeAuthStatus: any;
-  loggedIn: boolean;
-  setLoggedIn: any;
+  loading: boolean;
+  setLoading: any;
 }>({
   Auth: undefined,
   actor: undefined,
@@ -27,20 +27,21 @@ export const AuthContext = React.createContext<{
   setIIAuth: undefined,
   handleAuthenticated: undefined,
   changeAuthStatus: undefined,
-  loggedIn: undefined,
-  setLoggedIn: undefined,
+  loading: undefined,
+  setLoading: undefined,
 });
 
 export const AuthProvider = ({ children }) => {
   const [actor, setActor] = useState<ActorSubclass<_SERVICE>>();
   const [iiAuth, setIIAuth] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   async function Auth(e) {
     e.preventDefault();
     console.log("You clicked me.");
+    setLoading(true);
     // trackEvent({ category: "Authentication", action: "sign-in/sign-up" });
     const authClient = await AuthClient.create();
     if (await authClient.isAuthenticated()) {
@@ -50,6 +51,7 @@ export const AuthProvider = ({ children }) => {
         navigate("/");
       }
       setIIAuth(true);
+      setLoading(false);
     }
 
     const loginButton = document.getElementById("login") as HTMLButtonElement;
@@ -58,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     const hours = BigInt(24);
     const nanoseconds = BigInt(3600000000000);
 
-    const APPLICATION_NAME = "Nexai";
+    const APPLICATION_NAME = "IC Vault Box";
     const APPLICATION_LOGO_URL =
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJR6SAoiTMNdmt6tabURYYwvSp9XcA9IgMjw&usqp=CAU";
 
@@ -72,8 +74,9 @@ export const AuthProvider = ({ children }) => {
     await authClient.login({
       onSuccess: async () => {
         handleAuthenticated(authClient);
-        navigate("/");
+        navigate("/dashboard");
         setIIAuth(true);
+        setLoading(false);
       },
       windowOpenerFeatures:
         `left=${window.screen.width / 2 - 525 / 2}, ` +
@@ -120,8 +123,8 @@ export const AuthProvider = ({ children }) => {
         setIIAuth,
         handleAuthenticated,
         changeAuthStatus,
-        loggedIn,
-        setLoggedIn,
+        loading,
+        setLoading,
       }}
     >
       {children}

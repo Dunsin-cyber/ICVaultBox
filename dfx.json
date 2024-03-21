@@ -4,15 +4,13 @@
       "main": "src/ic_vault_box_backend/main.mo",
       "type": "motoko"
     },
-    "system_api" : {
+    "system_api": {
       "candid": "src/system_api/vetkd_system_api.did",
       "type": "rust",
       "package": "vetkd_system_api"
     },
     "ic_vault_box_frontend": {
-      "dependencies": [
-        "ic_vault_box_backend"
-      ],
+      "dependencies": ["ic_vault_box_backend"],
       "frontend": {
         "entrypoint": "src/ic_vault_box_frontend/src/index.html"
       },
@@ -21,6 +19,10 @@
         "dist/ic_vault_box_frontend/"
       ],
       "type": "assets"
+    },
+    "internet_identity": {
+      "type": "pull",
+      "id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
     }
   },
   "defaults": {
