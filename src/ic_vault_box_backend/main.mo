@@ -83,6 +83,10 @@ shared ({ caller }) actor class Vault() {
     
   };
 
+  public shared ({ caller }) func getPayload() : async () {
+
+  };
+
   // public func updatePayload(email : ?Text, username : ?Text, password : Text) : async Result.Result<(), Text> {
   //   for (payload in manager.vals()) {
   //     if ((payload.email == email) and (payload.password == password)) {
