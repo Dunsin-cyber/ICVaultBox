@@ -1,3 +1,4 @@
+import Principal "mo:base/Principal";
 module {
 
     public type Credentials = {
@@ -14,5 +15,7 @@ module {
         password : Text;
         password_updated : Bool;
         last_updated : ?Int;
-    }
+        owner:Principal;
+    };
+
 }

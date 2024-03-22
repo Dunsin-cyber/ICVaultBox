@@ -48,6 +48,8 @@ module.exports = {
   module: {
     rules: [
       { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
+      { test: /\.wasm$/, type: "webassembly/async" },
+
       { test: /\.css$/, use: ["style-loader", "css-loader"] },
 
       {
@@ -130,5 +132,8 @@ module.exports = {
     hot: true,
     watchFiles: [path.resolve(__dirname, "src", frontendDirectory)],
     liveReload: true,
+  },
+  experiments: {
+    asyncWebAssembly: true,
   },
 };

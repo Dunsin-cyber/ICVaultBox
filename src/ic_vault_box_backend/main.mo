@@ -17,19 +17,31 @@ shared ({ caller }) actor class Vault() {
   type Manager = Types.Manager;
   type Credentials = Types.Credentials;
 
+
   private stable var _credentials : [(Text, Credentials)] = [];
   private stable var _manager : [(Text, Manager)] = [];
+
 
   var credentials : Buffer.Buffer<Credentials> = Buffer.Buffer(0);
   var manager : Buffer.Buffer<Manager> = Buffer.Buffer(0);
 
+
   var Credentials : HashMap.HashMap<Text, Credentials> = HashMap.fromIter<Text, Credentials>(_credentials.vals(), 1, Text.equal, Text.hash);
   var Manager : HashMap.HashMap<Text, Manager> = HashMap.fromIter<Text, Manager>(_manager.vals(), 1, Text.equal, Text.hash);
+
+
 
   public query func greet(name : Text) : async Text {
     return "Hello, " # name # "!";
   };
 
+// public query ({caller}) func getPrincipal () : async Principal {
+//   caller
+// };
+
+  public shared query ({ caller }) func CheckPrincipal() : async Principal {
+    caller;
+  };
   public func initialize(email : Text, password : Text) : async Result.Result<Text, Text> {
     if (password.size() < 10) {
       return #err("must be more than ");
@@ -50,7 +62,7 @@ shared ({ caller }) actor class Vault() {
     };
   };
 
-  func createPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text, password_updated : Bool, last_updated : ?Int) : async Manager {
+  func createPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text, password_updated : Bool, last_updated : ?Int, owner:Principal) : async Manager {
     {
       site_name;
       website;
@@ -59,16 +71,17 @@ shared ({ caller }) actor class Vault() {
       password;
       password_updated;
       last_updated;
+      owner;
     };
   };
 
-  public func uploadPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text) : async () {
-    manager.add(await createPayload(site_name, website, username, email, password, false, null));
+  public shared ({ caller }) func uploadPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text) : async () {
+    manager.add(await createPayload(site_name, website, username, email, password, false, null, caller));
     if (email != null) {
       switch (email){
         case (null){};
         case(?email){
-          Manager.put(email, await createPayload(site_name, website, username, ?email, password, false, null));
+          Manager.put(email, await createPayload(site_name, website, username, ?email, password, false, null, caller));
           // let encryption_payload = website # email # password;
         }
       }
@@ -76,11 +89,21 @@ shared ({ caller }) actor class Vault() {
     switch(username) {
       case(null) {};
       case(?username) { 
-        Manager.put(username, await createPayload(site_name, website, ?username, email, password, false, null));
+        Manager.put(username, await createPayload(site_name, website, ?username, email, password, false, null, caller));
       };
     };
      
     
+  };
+
+  public shared query ({caller}) func getPayload (): async [Manager] {
+    var val = Buffer.Buffer<Manager>(0);
+    for ((i, j) in Manager.entries()) {
+      if ((j.owner == caller)) {
+            val.add(j);
+      };
+    };
+    val.toArray();
   };
 
   // public func updatePayload(email : ?Text, username : ?Text, password : Text) : async Result.Result<(), Text> {
@@ -111,7 +134,8 @@ shared ({ caller }) actor class Vault() {
         }) -> async ({ encrypted_key : Blob });
     };
 
-    let vetkd_system_api : VETKD_SYSTEM_API = actor ("s55qq-oqaaa-aaaaa-aaakq-cai");
+    // let vetkd_system_api : VETKD_SYSTEM_API = actor ("s55qq-oqaaa-aaaaa-aaakq-cai");
+     let vetkd_system_api : VETKD_SYSTEM_API = actor ("be2us-64aaa-aaaaa-qaabq-cai");
 
     public shared ({ caller }) func app_vetkd_public_key(derivation_path : [Blob]) : async Text {
         let { public_key } = await vetkd_system_api.vetkd_public_key({
@@ -131,15 +155,15 @@ shared ({ caller }) actor class Vault() {
         Hex.encode(Blob.toArray(public_key));
     };
 
-    public shared ({ caller }) func encrypted_symmetric_key_for_vault(email : Text, encryption_public_key : Blob) : async Text {
+    public shared ({ caller }) func encrypted_symmetric_key_for_vault(encryption_public_key : Blob) : async Text {
         Debug.print("encrypted_symmetric_key_for_caller: caller: " # debug_show (caller));
-        let _caller = Principal.toText(caller);
+        // let _caller = Principal.toText(caller);
 
-        let (?payload)= Manager.get(email) else Debug.trap("payload not found");
-
-        let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
+        // let (?payload)= Manager.get(email) else Debug.trap("payload not found");
+        // let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
         let { encrypted_key } = await vetkd_system_api.vetkd_encrypted_key({
-            derivation_id = encoded_payload;
+            // derivation_id = encoded_payload;
+             derivation_id = Principal.toBlob(caller);
             public_key_derivation_path = Array.make(Text.encodeUtf8("vault_symmetric_key"));
             key_id = { curve = #bls12_381; name = "test_key_1" };
             encryption_public_key;

@@ -4,6 +4,7 @@ import { AuthContext } from "../context";
 
 function SplashScreen() {
   const { Auth, loading } = React.useContext(AuthContext);
+
   return (
     <Box
       h={`100vh`}

@@ -3,7 +3,7 @@ import { Actor, Identity, ActorSubclass } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 import {
   createActor,
-  canisterId,
+  // canisterId,
 } from "../../declarations/ic_vault_box_backend";
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,6 +30,8 @@ export const AuthContext = React.createContext<{
   loading: undefined,
   setLoading: undefined,
 });
+
+const canisterId = "bkyz2-fmaaa-aaaaa-qaaaq-cai";
 
 export const AuthProvider = ({ children }) => {
   const [actor, setActor] = useState<ActorSubclass<_SERVICE>>();
@@ -100,7 +102,7 @@ export const AuthProvider = ({ children }) => {
         identity,
       },
     });
-
+    console.log(whoami_actor);
     setActor(whoami_actor);
 
     // Invalidate identity then render login when user goes idle

@@ -29,6 +29,9 @@ dependencies:
   framer-motion:
     specifier: ^11.0.12
     version: 11.0.12(react-dom@18.2.0)(react@18.2.0)
+  ic-vetkd-utils:
+    specifier: file:ic-vetkd-utils-0.1.0.tgz
+    version: file:ic-vetkd-utils-0.1.0.tgz
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -4867,4 +4870,10 @@ packages:
   /yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
+    dev: false
+
+  file:ic-vetkd-utils-0.1.0.tgz:
+    resolution: {integrity: sha512-3hisUJ9WLFS+7TOrps2BT1cHwTdLumLacN0TdrCLYZqOoMngGP30gSqfUtB7c9wSrz4ZSjpJw34o5i6bn5CyMw==, tarball: file:ic-vetkd-utils-0.1.0.tgz}
+    name: ic-vetkd-utils
+    version: 0.1.0
     dev: false
