@@ -8,6 +8,7 @@ module {
 
     public type Manager = {
         site_name : Text;
+        caller : Principal;
         website : Text;
         username : ?Text;
         email : ?Text;

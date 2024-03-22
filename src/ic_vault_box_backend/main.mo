@@ -50,9 +50,10 @@ shared ({ caller }) actor class Vault() {
     };
   };
 
-  func createPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text, password_updated : Bool, last_updated : ?Int) : async Manager {
+  func createPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text, password_updated : Bool, last_updated : ?Int, caller : Principal) : async Manager {
     {
       site_name;
+      caller;
       website;
       username;
       email;
@@ -62,13 +63,13 @@ shared ({ caller }) actor class Vault() {
     };
   };
 
-  public func uploadPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text) : async () {
-    manager.add(await createPayload(site_name, website, username, email, password, false, null));
+  public shared ({ caller }) func uploadPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text) : async () {
+    manager.add(await createPayload(site_name, website, username, email, password, false, null, caller));
     if (email != null) {
       switch (email){
         case (null){};
         case(?email){
-          Manager.put(email, await createPayload(site_name, website, username, ?email, password, false, null));
+          Manager.put(email # Principal.toText(caller) # website, await createPayload(site_name, website, username, ?email, password, false, null, caller));
           // let encryption_payload = website # email # password;
         }
       }
@@ -76,16 +77,18 @@ shared ({ caller }) actor class Vault() {
     switch(username) {
       case(null) {};
       case(?username) { 
-        Manager.put(username, await createPayload(site_name, website, ?username, email, password, false, null));
+        Manager.put(username # Principal.toText(caller) # website, await createPayload(site_name, website, ?username, email, password, false, null, caller));
       };
     };
      
     
   };
 
-  public shared ({ caller }) func getPayload() : async () {
-
+  public shared ({ caller }) func getPayload(email : Text, website : Text) : async ?Manager {
+    Manager.get(email # Principal.toText(caller) # website);
   };
+
+  
 
   // public func updatePayload(email : ?Text, username : ?Text, password : Text) : async Result.Result<(), Text> {
   //   for (payload in manager.vals()) {
@@ -135,11 +138,11 @@ shared ({ caller }) actor class Vault() {
         Hex.encode(Blob.toArray(public_key));
     };
 
-    public shared ({ caller }) func encrypted_symmetric_key_for_vault(email : Text, encryption_public_key : Blob) : async Text {
+    public shared ({ caller }) func encrypted_symmetric_key_for_vault(email : Text, website : Text, encryption_public_key : Blob) : async Text {
         Debug.print("encrypted_symmetric_key_for_caller: caller: " # debug_show (caller));
         let _caller = Principal.toText(caller);
 
-        let (?payload)= Manager.get(email) else Debug.trap("payload not found");
+        let (?payload)= Manager.get(email # _caller # website) else Debug.trap("payload not found");
 
         let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
         let { encrypted_key } = await vetkd_system_api.vetkd_encrypted_key({
@@ -170,12 +173,12 @@ shared ({ caller }) actor class Vault() {
         Hex.encode(Blob.toArray(public_key));
     };
 
-    public shared ({ caller }) func encrypted_ibe_decryption_key_for_caller(email : Text, encryption_public_key : Blob) : async Text {
+    public shared ({ caller }) func encrypted_ibe_decryption_key_for_caller(email : Text, website : Text, encryption_public_key : Blob) : async Text {
         Debug.print("encrypted_ibe_decryption_key_for_caller: caller: " # debug_show (caller));
 
         let _caller = Principal.toText(caller);
 
-        let (?payload)= Manager.get(email) else Debug.trap("payload not found");
+        let (?payload)= Manager.get(email # _caller # website) else Debug.trap("payload not found");
 
         let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
 
