@@ -9,19 +9,24 @@ import {
   InputGroup,
   VStack,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
 import PasswordListView from "../components/PasswordListView";
 import AddPasswordView from "./AddPassword";
 import EditPasswordView from "./EditPasswordView";
 import { AuthContext } from "../context";
 import * as vetkd from "ic-vetkd-utils";
-import { hex_decode, hex_encode } from "../utils";
+import { hex_decode } from "../utils";
+import { addPassword, clearPassword } from "../redux/slice/passwordSlice";
+import { useAppDispatch } from "../redux/hooks";
 
 function LandingPage() {
   const [addNew, setAddNew] = useState(false);
   const [edit, setEdit] = useState(false);
   const { actor, setSymmetricKey, symmetricKey } =
     React.useContext(AuthContext);
+  const dispatch = useAppDispatch();
+  const toast = useToast();
 
   async function get_aes_256_gcm_key() {
     const seed = window.crypto.getRandomValues(new Uint8Array(32));
@@ -41,6 +46,30 @@ function LandingPage() {
     );
   }
 
+  const fetchPasswords = async () => {
+    try {
+      // setLoading(true);
+      dispatch(clearPassword());
+      const pass = await actor.getPayload();
+      // setLoading(false);
+      pass.map((d) => {
+        var passphrase = {
+          cypher: d.password,
+          name: d.site_name,
+          updated_at: Number(d.last_updated),
+        };
+        dispatch(addPassword(passphrase));
+      });
+    } catch (err) {
+      toast({
+        title: "Something went wrong",
+        description: err.message,
+      });
+      console.log(err);
+      // setLoading(false);
+    }
+  };
+
   React.useEffect(() => {
     const call = async () => {
       const bab = await get_aes_256_gcm_key();
@@ -48,6 +77,7 @@ function LandingPage() {
     };
 
     call();
+    // fetchPasswords();
   }, []);
 
   return addNew ? (

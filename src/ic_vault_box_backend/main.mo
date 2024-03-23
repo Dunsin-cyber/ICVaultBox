@@ -9,7 +9,10 @@ import Blob "mo:base/Blob";
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
 import Principal "mo:base/Principal";
+import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
+import Hash "mo:base/Hash";
+
 
 // import Type "type";
 
@@ -29,7 +32,7 @@ shared ({ caller }) actor class Vault() {
 
 
   var Credentials : HashMap.HashMap<Text, Credentials> = HashMap.fromIter<Text, Credentials>(_credentials.vals(), 1, Text.equal, Text.hash);
-  var Manager : HashMap.HashMap<Nat, Manager> = HashMap.fromIter<Nat, Manager>(_manager.vals(), 1, Nat.equal, Nat.hash);
+  var Manager : HashMap.HashMap<Nat, Manager> = HashMap.fromIter<Nat, Manager>(_manager.vals(), 1, Nat.equal, Hash.hash);
 
 
 
@@ -87,20 +90,20 @@ shared ({ caller }) actor class Vault() {
     
   };
 
-  public shared query ({caller}) func getPayload (): async (){
-    // var val = Buffer.Buffer<Manager>(0);
+  public shared query ({caller}) func getPayload (): async [Manager]{
+    var val = Buffer.Buffer<Manager>(0);
     for ((i, j) in Manager.entries()) {
       if ((j.owner == caller)) {
-             Debug.print(debug_show(j))
-            // val.add(j);
+            //  Debug.print(debug_show(j))
+            val.add(j);
       };
     };
-    // val.toArray();
+    val.toArray();
   };
 
-  public shared ({ caller }) func getPayload(email : Text, website : Text) : async ?Manager {
-    Manager.get(email # Principal.toText(caller) # website);
-  };
+  // public shared ({ caller }) func getPayload(email : Text, website : Text) : async ?Manager {
+  //   Manager.get(email # Principal.toText(caller) # website);
+  // };
 
   
 
