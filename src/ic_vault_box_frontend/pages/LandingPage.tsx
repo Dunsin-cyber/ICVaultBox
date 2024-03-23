@@ -8,6 +8,7 @@ import {
   InputLeftElement,
   InputGroup,
   VStack,
+  Spinner,
 } from "@chakra-ui/react";
 import PasswordListView from "../components/PasswordListView";
 import AddPasswordView from "./AddPassword";
@@ -16,16 +17,16 @@ import { AuthContext } from "../context";
 import * as vetkd from "ic-vetkd-utils";
 import { hex_decode, hex_encode } from "../utils";
 
-let fetched_symmetric_key = null;
-
 function LandingPage() {
   const [addNew, setAddNew] = useState(false);
   const [edit, setEdit] = useState(false);
-  const { actor } = React.useContext(AuthContext);
+  const { actor, setSymmetricKey, symmetricKey } =
+    React.useContext(AuthContext);
 
   async function get_aes_256_gcm_key() {
     const seed = window.crypto.getRandomValues(new Uint8Array(32));
     const principal = await actor?.CheckPrincipal();
+    console.log(principal.toString());
     const tsk = new vetkd.TransportSecretKey(seed);
     const ek_bytes_hex = await actor.encrypted_symmetric_key_for_vault(
       tsk.public_key()
@@ -41,7 +42,12 @@ function LandingPage() {
   }
 
   React.useEffect(() => {
-    console.log(get_aes_256_gcm_key());
+    const call = async () => {
+      const bab = await get_aes_256_gcm_key();
+      setSymmetricKey(bab);
+    };
+
+    call();
   }, []);
 
   return addNew ? (
@@ -80,9 +86,18 @@ function LandingPage() {
         <Input placeholder="Search" />
       </InputGroup>
 
-      <VStack>
-        <PasswordListView edit={setEdit} />
-      </VStack>
+      {!symmetricKey ? (
+        <Flex gap={3} justify={"center"} mt={2}>
+          <Text fontSize={"10px"}>
+            Fetching symmetric key (AES-GCM-256) to local storage...
+          </Text>
+          <Spinner thickness="2px" speed="0.65s" color="purple.500" />
+        </Flex>
+      ) : (
+        <VStack>
+          <PasswordListView edit={setEdit} />
+        </VStack>
+      )}
 
       <Flex
         pos={`absolute`}

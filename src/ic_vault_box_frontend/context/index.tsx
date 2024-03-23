@@ -3,7 +3,7 @@ import { Actor, Identity, ActorSubclass } from "@dfinity/agent";
 import { AuthClient } from "@dfinity/auth-client";
 import {
   createActor,
-  // canisterId,
+  canisterId,
 } from "../../declarations/ic_vault_box_backend";
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,6 +19,9 @@ export const AuthContext = React.createContext<{
   changeAuthStatus: any;
   loading: boolean;
   setLoading: any;
+  symmetricKey: any;
+  setSymmetricKey: any;
+  // fetched_symmetric_key: any;
 }>({
   Auth: undefined,
   actor: undefined,
@@ -29,14 +32,18 @@ export const AuthContext = React.createContext<{
   changeAuthStatus: undefined,
   loading: undefined,
   setLoading: undefined,
+  // fetched_symmetric_key: null,
+  symmetricKey: null,
+  setSymmetricKey: undefined,
 });
 
-const canisterId = "bkyz2-fmaaa-aaaaa-qaaaq-cai";
+// const canisterId = "bkyz2-fmaaa-aaaaa-qaaaq-cai";
 
 export const AuthProvider = ({ children }) => {
   const [actor, setActor] = useState<ActorSubclass<_SERVICE>>();
   const [iiAuth, setIIAuth] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [symmetricKey, setSymmetricKey] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -77,6 +84,7 @@ export const AuthProvider = ({ children }) => {
       onSuccess: async () => {
         handleAuthenticated(authClient);
         navigate("/dashboard");
+        window.location.reload();
         setIIAuth(true);
         setLoading(false);
       },
@@ -127,6 +135,8 @@ export const AuthProvider = ({ children }) => {
         changeAuthStatus,
         loading,
         setLoading,
+        symmetricKey,
+        setSymmetricKey,
       }}
     >
       {children}
