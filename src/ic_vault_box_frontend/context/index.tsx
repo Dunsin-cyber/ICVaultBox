@@ -21,7 +21,6 @@ export const AuthContext = React.createContext<{
   setLoading: any;
   symmetricKey: any;
   setSymmetricKey: any;
-  // fetched_symmetric_key: any;
 }>({
   Auth: undefined,
   actor: undefined,
@@ -32,7 +31,6 @@ export const AuthContext = React.createContext<{
   changeAuthStatus: undefined,
   loading: undefined,
   setLoading: undefined,
-  // fetched_symmetric_key: null,
   symmetricKey: null,
   setSymmetricKey: undefined,
 });

@@ -14,7 +14,7 @@ module {
         email : ?Text;
         password : Text;
         password_updated : Bool;
-        last_updated : ?Int;
+        last_updated : Int;
         owner:Principal;
     };
 

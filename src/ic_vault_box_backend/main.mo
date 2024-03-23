@@ -4,6 +4,7 @@ import HashMap "mo:base/HashMap";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
+import Time "mo:base/Time";
 import Blob "mo:base/Blob";
 import Array "mo:base/Array";
 import Debug "mo:base/Debug";
@@ -19,15 +20,16 @@ shared ({ caller }) actor class Vault() {
 
 
   private stable var _credentials : [(Text, Credentials)] = [];
-  private stable var _manager : [(Text, Manager)] = [];
+  private stable var _manager : [(Nat, Manager)] = [];
 
+ private stable var managerID : Nat = 0;
 
   var credentials : Buffer.Buffer<Credentials> = Buffer.Buffer(0);
   var manager : Buffer.Buffer<Manager> = Buffer.Buffer(0);
 
 
   var Credentials : HashMap.HashMap<Text, Credentials> = HashMap.fromIter<Text, Credentials>(_credentials.vals(), 1, Text.equal, Text.hash);
-  var Manager : HashMap.HashMap<Text, Manager> = HashMap.fromIter<Text, Manager>(_manager.vals(), 1, Text.equal, Text.hash);
+  var Manager : HashMap.HashMap<Nat, Manager> = HashMap.fromIter<Nat, Manager>(_manager.vals(), 1, Nat.equal, Nat.hash);
 
 
 
@@ -62,7 +64,7 @@ shared ({ caller }) actor class Vault() {
     };
   };
 
-  func createPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text, password_updated : Bool, last_updated : ?Int, owner:Principal) : async Manager {
+  func createPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text, password_updated : Bool, last_updated : Int, owner:Principal) : async Manager {
     {
       site_name;
       website;
@@ -76,34 +78,23 @@ shared ({ caller }) actor class Vault() {
   };
 
   public shared ({ caller }) func uploadPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text) : async () {
-    manager.add(await createPayload(site_name, website, username, email, password, false, null, caller));
-    if (email != null) {
-      switch (email){
-        case (null){};
-        case(?email){
-          Manager.put(email, await createPayload(site_name, website, username, ?email, password, false, null, caller));
-          // let encryption_payload = website # email # password;
-        }
-      }
-    };
-    switch(username) {
-      case(null) {};
-      case(?username) { 
-        Manager.put(username, await createPayload(site_name, website, ?username, email, password, false, null, caller));
-      };
-    };
-     
+    manager.add(await createPayload(site_name, website, username, email, password, false, Time.now(), caller));
+    Manager.put(managerID, await createPayload(site_name, website, username, email, password, false, Time.now(), caller));
+    managerID := managerID + 1;
+
+
     
   };
 
-  public shared query ({caller}) func getPayload (): async [Manager] {
-    var val = Buffer.Buffer<Manager>(0);
+  public shared query ({caller}) func getPayload (): async (){
+    // var val = Buffer.Buffer<Manager>(0);
     for ((i, j) in Manager.entries()) {
       if ((j.owner == caller)) {
-            val.add(j);
+             Debug.print(debug_show(j))
+            // val.add(j);
       };
     };
-    val.toArray();
+    // val.toArray();
   };
 
   // public func updatePayload(email : ?Text, username : ?Text, password : Text) : async Result.Result<(), Text> {
@@ -196,12 +187,12 @@ shared ({ caller }) actor class Vault() {
 
         let _caller = Principal.toText(caller);
 
-        let (?payload)= Manager.get(email) else Debug.trap("payload not found");
+        // let (?payload)= Manager.get(email) else Debug.trap("payload not found");
 
-        let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
+        // let encoded_payload = Text.encodeUtf8(_caller # email # payload.website # payload.password);
 
         let { encrypted_key } = await vetkd_system_api.vetkd_encrypted_key({
-            derivation_id = encoded_payload;
+            derivation_id = Principal.toBlob(caller);
             public_key_derivation_path = Array.make(Text.encodeUtf8("ibe_encryption"));
             key_id = { curve = #bls12_381; name = "test_key_1" };
             encryption_public_key;
