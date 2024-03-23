@@ -67,6 +67,7 @@ shared ({ caller }) actor class Vault() {
   func createPayload(site_name : Text, website : Text, username : ?Text, email : ?Text, password : Text, password_updated : Bool, last_updated : Int, owner:Principal) : async Manager {
     {
       site_name;
+      caller;
       website;
       username;
       email;
@@ -96,6 +97,12 @@ shared ({ caller }) actor class Vault() {
     };
     // val.toArray();
   };
+
+  public shared ({ caller }) func getPayload(email : Text, website : Text) : async ?Manager {
+    Manager.get(email # Principal.toText(caller) # website);
+  };
+
+  
 
   // public func updatePayload(email : ?Text, username : ?Text, password : Text) : async Result.Result<(), Text> {
   //   for (payload in manager.vals()) {
@@ -182,7 +189,7 @@ shared ({ caller }) actor class Vault() {
         Hex.encode(Blob.toArray(public_key));
     };
 
-    public shared ({ caller }) func encrypted_ibe_decryption_key_for_caller(email : Text, encryption_public_key : Blob) : async Text {
+    public shared ({ caller }) func encrypted_ibe_decryption_key_for_caller(email : Text, website : Text, encryption_public_key : Blob) : async Text {
         Debug.print("encrypted_ibe_decryption_key_for_caller: caller: " # debug_show (caller));
 
         let _caller = Principal.toText(caller);
