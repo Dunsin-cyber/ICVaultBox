@@ -73,10 +73,12 @@ function passwwordListView({ edit }) {
   const handleDecrypt = async (pw: string) => {
     try {
       setLoading2(true);
-
-      const val = await aes_gcm_decrypt(pw);
-      setDecrypt(val);
-      setLoading2(false);
+      setTimeout(async () => {
+        console.log("decrypting");
+        const val = await aes_gcm_decrypt(pw);
+        setDecrypt(val);
+        setLoading2(false);
+      }, 2000);
     } catch (err) {
       toast({
         title: "Something went wrong",
@@ -101,21 +103,25 @@ function passwwordListView({ edit }) {
                   {val?.name}
                 </Text>
                 {loading2 ? (
-                  <Text fontSize={`xs`}>decrypting cypher {val.cypher}...</Text>
+                  <Flex>
+                    <Text fontSize={`xs`}>decrypting cypher</Text>
+                    <Text fontSize={`xs`}>{val.cypher.slice(1, 20)}...</Text>
+                  </Flex>
                 ) : (
                   <Text fontSize={`xs`}>{decrypt}</Text>
                 )}
 
-                <Text fontSize={10}>{DateFormatter(val?.updated_at)}</Text>
+                <Text fontSize={`xs`}>{DateFormatter(val?.updated_at)}</Text>
               </Box>
             </VStack>
 
             <Flex
               align={`center`}
-              ms={`110px`}
+              // ms={`110px`}
               onClick={() => handleDecrypt(val?.cypher)}
             >
-              <Image src="readmore.svg" m={`0`} mx={2} />
+              <Text fontSize={`xs`}>Decrypt</Text>
+              {/* <Image src="readmore.svg" m={`0`} mx={2} /> */}
             </Flex>
 
             {appear && (

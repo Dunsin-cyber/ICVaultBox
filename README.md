@@ -1,6 +1,38 @@
-# ic_vault_box
+# ICVaultBox
 
-Welcome to your new ic_vault_box project and to the internet computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+# What it is
+
+ICVaultBox is a secure data management solution built on the Internet Computer Protocol (ICP) and leveraging the innovative vetkd library for encryption. It empowers users to encrypt and store any type of data – passwords, files, images, NFTs, audio, and more – in a decentralized manner, ensuring greater control and security compared to traditional storage methods.
+
+# The problem
+
+Centralized storage providers can be vulnerable to breaches or data leaks. Even with strong access controls, a compromise on their end could expose your sensitive information.
+
+# The Solution: ICVaultBox
+
+ICVaultBox offers a decentralized approach to data management, addressing the limitations of traditional methods:
+
+- Decentralized Storage: Your encrypted data is not stored on a central server, minimizing the risk of a single point of failure.
+
+- vetkd Encryption: ICVaultBox utilizes vetkd, a powerful library providing robust encryption for all your data.
+
+- Symmetric Key Storage in Browser: For faster decryption, ICVaultBox securely stores the symmetric key within your browser's secure storage.
+- Planned Browser Extension: A browser extension (under development) will seamlessly integrate with ICVaultBox, streamlining data management tasks.
+
+# Key Features
+
+- Decentralized Data Storage: Gain peace of mind knowing your data is not centralized and vulnerable to attack.
+- Broad Data Support: Store passwords, files, images, NFTs, audio, and any other type of data securely.
+- vetkd Encryption: Benefit from the strength and security of vetkd's encryption algorithms for all your data.
+  Fast Decryption: Enjoy a smooth user experience with the symmetric key stored securely in your browser.
+- Planned Automatic Data Detection: (In development) [web extension repo](https://github.com/Dunsin-cyber/web-extension) The upcoming browser extension will streamline data management by automatically detecting and offering to save various data types for you.
+
+# Additional Notes
+
+This README provides a high-level overview of ICVaultBox. More detailed documentation will be added as the project progresses.
+Stay tuned for updates on the browser extension's development!
+
+# Replicate Locally
 
 To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
 
