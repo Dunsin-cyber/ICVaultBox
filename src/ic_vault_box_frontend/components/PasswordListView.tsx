@@ -76,7 +76,8 @@ function passwwordListView({ edit }) {
       setTimeout(async () => {
         console.log("decrypting");
         const val = await aes_gcm_decrypt(pw);
-        setDecrypt(val);
+        var decrypted = val.split("/n");
+        setDecrypt(decrypted[1]);
         setLoading2(false);
       }, 2000);
     } catch (err) {
@@ -93,58 +94,59 @@ function passwwordListView({ edit }) {
   return (
     <Box w={`100%`} pos={`relative`}>
       {data?.map((val, index) => (
-        <HStack py={2} key={index}>
-          <Image src="placeholder.svg" m={`0`} mx={2} />
+        <HStack py={2} key={index} justify={`space-between`}>
+          <Flex>
+            <Image src="placeholder.svg" m={`0`} mx={2} />
 
-          <Flex justify={`space-between`}>
-            <VStack spacing={0}>
-              <Box justify={`start`}>
-                <Text as={`b`} color={`#2931EE`} fontSize={`lg`}>
-                  {val?.name}
-                </Text>
-                {loading2 ? (
-                  <Flex>
-                    <Text fontSize={`xs`}>decrypting cypher</Text>
-                    <Text fontSize={`xs`}>{val.cypher.slice(1, 20)}...</Text>
-                  </Flex>
-                ) : (
-                  <Text fontSize={`xs`}>{decrypt}</Text>
-                )}
+            <Flex justify={`space-between`}>
+              <VStack spacing={0}>
+                <Box justify={`start`}>
+                  <Text as={`b`} color={`#2931EE`} fontSize={`lg`}>
+                    {val?.name}
+                  </Text>
+                  {loading2 ? (
+                    <Flex>
+                      <Text fontSize={`xs`}>decrypting cypher .</Text>
+                      <Text fontSize={`xs`}>{val.cypher.slice(1, 10)}...</Text>
+                    </Flex>
+                  ) : (
+                    <Text fontSize={`xs`}>{decrypt}</Text>
+                  )}
 
-                <Text fontSize={`xs`}>{DateFormatter(val?.updated_at)}</Text>
-              </Box>
-            </VStack>
-
-            <Flex
-              align={`center`}
-              // ms={`110px`}
-              onClick={() => handleDecrypt(val?.cypher)}
-            >
-              <Text fontSize={`xs`}>Decrypt</Text>
-              {/* <Image src="readmore.svg" m={`0`} mx={2} /> */}
+                  <Text fontSize={`xs`}>{DateFormatter(val?.updated_at)}</Text>
+                </Box>
+              </VStack>
             </Flex>
-
-            {appear && (
-              <Box
-                pos={`absolute`}
-                right={0}
-                top={`50px`}
-                borderRadius={10}
-                w={`100px`}
-                h={`80px`}
-                bg={"white"}
-                zIndex={88}
-                border={`1px`}
-              >
-                <Text p={3} fontSize={10} onClick={() => edit(true)}>
-                  Edit
-                </Text>
-                <Text p={3} fontSize={10}>
-                  Delete
-                </Text>
-              </Box>
-            )}
           </Flex>
+          <Button
+            size={"xs"}
+            align={`center`}
+            onClick={() => handleDecrypt(val?.cypher)}
+          >
+            Decrypt
+            {/* <Image src="readmore.svg" m={`0`} mx={2} /> */}
+          </Button>
+
+          {appear && (
+            <Box
+              pos={`absolute`}
+              right={0}
+              top={`50px`}
+              borderRadius={10}
+              w={`100px`}
+              h={`80px`}
+              bg={"white"}
+              zIndex={88}
+              border={`1px`}
+            >
+              <Text p={3} fontSize={10} onClick={() => edit(true)}>
+                Edit
+              </Text>
+              <Text p={3} fontSize={10}>
+                Delete
+              </Text>
+            </Box>
+          )}
         </HStack>
       ))}
       <Divider />

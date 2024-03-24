@@ -128,22 +128,23 @@ function LandingPage() {
           <PasswordListView edit={setEdit} />
         </VStack>
       )}
-
-      <Flex
-        pos={`absolute`}
-        bottom={5}
-        left={`50%`}
-        transform={`translateX(-50%)`}
-        w={`50px`}
-        h={`50px`}
-        borderRadius={`full`}
-        bg={`#2931EE`}
-        alignContent={`center`}
-        justifyContent={`center`}
-        onClick={() => setAddNew(!addNew)}
-      >
-        <Image src="add.svg" m={`0`} mx={2} w={`35%`} />
-      </Flex>
+      {symmetricKey && (
+        <Flex
+          pos={`absolute`}
+          bottom={5}
+          left={`50%`}
+          transform={`translateX(-50%)`}
+          w={`50px`}
+          h={`50px`}
+          borderRadius={`full`}
+          bg={`#2931EE`}
+          alignContent={`center`}
+          justifyContent={`center`}
+          onClick={() => setAddNew(!addNew)}
+        >
+          <Image src="add.svg" m={`0`} mx={2} w={`35%`} />
+        </Flex>
+      )}
     </Box>
   );
 }
